@@ -1,8 +1,22 @@
-package org.example;
-import java.util.Scanner;
 import java.io.*;
-import java.util.regex.*;
+import java.util.Scanner;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.util.logging.*;
+
 public class ExercisesTuesday {
+    private static Logger logger = Logger.getLogger("UserInteractions");
+
+    static {
+        try {
+            FileHandler fileHandler = new FileHandler("user_interactions.log", true);
+            SimpleFormatter formatter = new SimpleFormatter();
+            fileHandler.setFormatter(formatter);
+            logger.addHandler(fileHandler);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public static boolean isValidEmail(String email) {
         String regex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
         Pattern pattern = Pattern.compile(regex);
@@ -11,8 +25,12 @@ public class ExercisesTuesday {
     }
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the name of the file to store your data (e.g., user_info.txt):");
+        String fileName = sc.nextLine();
+        logger.info("User entered file name: " + fileName);
         System.out.println("What's your name?");
         String name = sc.nextLine();
+        logger.info("User entered name: " + name);
         int age = 0;
         while (true) {
             try {
@@ -30,6 +48,17 @@ public class ExercisesTuesday {
             }
         }
         int birthYear = 2023 - age;
+        String ageCategory = " ";
+        if (age <= 12){
+            ageCategory = "Child";
+        } else if (age >12 && age <= 19) {
+            ageCategory = "Teenager";
+        } else if (age >19 && age <=64) {
+            ageCategory = "Adult";
+        } else if (age >= 65) {
+            ageCategory = "Senior";
+        }
+        logger.info("User entered age: " + age);
         String email;
         System.out.println("What's your email address?");
         while (true) {
@@ -38,10 +67,13 @@ public class ExercisesTuesday {
                 break;
             } else {
                 System.out.println(email + " is not a valid email address. Please try again.");
+                logger.info("User entered invalid email: " + email);
             }
         }
+        logger.info("User entered email: " + email);
         System.out.println("What is your phone number?");
         String phone = sc.nextLine();
+        logger.info("User entered ph number: " + age);
         System.out.println("What's your address?");
         String address = sc.nextLine();
         System.out.println("What is your favourite book?");
@@ -72,10 +104,11 @@ public class ExercisesTuesday {
             default : favColour = "none";
         }
         try {
-            FileWriter fileWriter = new FileWriter("user_info.txt");
+            FileWriter fileWriter = new FileWriter(fileName);
             fileWriter.write("Name: " + name + "\n");
             fileWriter.write("Age: " + age + "\n");
             fileWriter.write("Year of birth: " + birthYear + "\n");
+            fileWriter.write("Age category: " + ageCategory + "\n");
             fileWriter.write("Email: " + email + "\n");
             fileWriter.write("Phone: " + phone + "\n");
             fileWriter.write("Address: " + address + "\n");
@@ -88,34 +121,86 @@ public class ExercisesTuesday {
             e.printStackTrace();
         }
         try {
-            FileReader fileReader = new FileReader("user_info.txt");
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            FileInputStream fileInput = new FileInputStream(fileName);
+            InputStreamReader reader = new InputStreamReader(fileInput);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+
+            String phoneNumber = null;
+            String userAddress = null;
 
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                System.out.println(line);
+                if (line.startsWith("Phone: ")) {
+                    phoneNumber = line.substring(7);
+                } else if (line.startsWith("Address: ")) {
+                    userAddress = line.substring(9);
+                } else if (line.startsWith("Favourite colour: ")) {
+                    favColour = line.substring(18);
+                }
             }
 
-            bufferedReader.close();
-        } catch (IOException e) {
-            System.out.println("An error occurred while reading the file.");
-            e.printStackTrace();
-        }
-        sc.close();
+            if (phoneNumber != null && userAddress != null && favColour != null) {
+                System.out.println("Phone Number: " + phoneNumber);
+                System.out.println("Address: " + userAddress);
+                System.out.println("Favourite colour: "+favColour);
+            } else {
+                System.out.println("Phone number and/or address and/or favourite colour not found in the file.");
+            }
 
-        try {
-            FileInputStream fileInput = new FileInputStream("userInfo.txt");
-            InputStreamReader reader = new InputStreamReader(fileInput);
-            BufferedReader bufferedReader = new BufferedReader(reader);
-            String phoneNumber = bufferedReader.readLine();
-            String address = bufferedReader.readLine();
-            System.out.println("Phone Number: " + phoneNumber);
-            System.out.println("Address: " + address);
             bufferedReader.close();
         } catch (FileNotFoundException e) {
             System.err.println("File not found: " + e.getMessage());
         } catch (IOException e) {
             System.err.println("Error reading from file: " + e.getMessage());
         }
+        sc.nextLine();
+        System.out.println("Do you want to update your email? (y/n): ");
+        String updateEmail = sc.nextLine();
+        if (updateEmail.equals("y")) {
+            System.out.println("Enter your new email address: ");
+            email = sc.nextLine();
+        }
+        System.out.println("Do you want to update your phone number? (y/n): ");
+        String updatePhone = sc.nextLine();
+        if (updatePhone.equals("y")) {
+            System.out.println("Enter your new phone number: ");
+            phone = sc.nextLine();
+        }
+        System.out.println("Do you want to update your address? (y/n): ");
+        String updateAddress = sc.nextLine();
+        if (updateAddress.equals("y")) {
+            System.out.println("Enter your new address: ");
+            address = sc.nextLine();
+        }
+        System.out.println("Updated User Information:");
+        System.out.println("Name: " + name);
+        System.out.println("Age: " + age);
+        System.out.println("Year of birth: " + birthYear);
+        System.out.println("Age category: " + ageCategory);
+        System.out.println("Email: " + email);
+        System.out.println("Phone: " + phone);
+        System.out.println("Address: " + address);
+        System.out.println("Favourite book: " + bookTitle + " by " + bookAuthor + " published in " + publishedYear);
+        System.out.println("Favourite colour: " + favColour);
+
+        System.out.println("Do you want to delete your information? (y/n): ");
+        String deleteInfo = sc.nextLine();
+        if (deleteInfo.equalsIgnoreCase("y")) {
+            System.out.println("Are you sure? (y/n)");
+            deleteInfo = sc.nextLine();
+            if (deleteInfo.equalsIgnoreCase("y")) {
+                try {
+                    File userInfoFile = new File(fileName);
+                    if (userInfoFile.delete()) {
+                        System.out.println("Your information has been deleted.");
+                    } else {
+                        System.out.println("Failed to delete your information.");
+                    }
+                } catch (Exception e) {
+                    System.err.println("An error occurred while deleting the information: " + e.getMessage());
+                }
+            }
+        }
+        sc.close();
     }
 }
