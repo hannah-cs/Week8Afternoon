@@ -6,13 +6,23 @@ import java.util.logging.*;
 
 public class ExercisesTuesday {
     private static Logger logger = Logger.getLogger("UserInteractions");
-
+    private static int interactionCount = 0;
     static {
         try {
             FileHandler fileHandler = new FileHandler("user_interactions.log", true);
             SimpleFormatter formatter = new SimpleFormatter();
             fileHandler.setFormatter(formatter);
             logger.addHandler(fileHandler);
+            BufferedReader logReader = new BufferedReader(new FileReader("user_interactions.log"));
+            String line;
+            while ((line = logReader.readLine()) != null) {
+                if (line.contains("Interaction Count:")) {
+                    String countStr = line.split(":")[1].trim();
+                    interactionCount = Integer.parseInt(countStr);
+                }
+            }
+            logReader.close();
+            interactionCount++;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -73,7 +83,7 @@ public class ExercisesTuesday {
         logger.info("User entered email: " + email);
         System.out.println("What is your phone number?");
         String phone = sc.nextLine();
-        logger.info("User entered ph number: " + age);
+        logger.info("User entered ph number: " + phone);
         System.out.println("What's your address?");
         String address = sc.nextLine();
         System.out.println("What is your favourite book?");
@@ -103,6 +113,7 @@ public class ExercisesTuesday {
                 break;
             default : favColour = "none";
         }
+        logger.info("User selected "+favColour+" as their favourite colour");
         try {
             FileWriter fileWriter = new FileWriter(fileName);
             fileWriter.write("Name: " + name + "\n");
@@ -159,18 +170,27 @@ public class ExercisesTuesday {
         if (updateEmail.equals("y")) {
             System.out.println("Enter your new email address: ");
             email = sc.nextLine();
+            logger.info("User updated email to: "+email);
+        } else {
+            logger.info("User chose not to update email");
         }
         System.out.println("Do you want to update your phone number? (y/n): ");
         String updatePhone = sc.nextLine();
         if (updatePhone.equals("y")) {
             System.out.println("Enter your new phone number: ");
             phone = sc.nextLine();
+            logger.info("User updated phone number to: "+phone);
+        }else {
+            logger.info("User chose not to update phone number");
         }
         System.out.println("Do you want to update your address? (y/n): ");
         String updateAddress = sc.nextLine();
         if (updateAddress.equals("y")) {
             System.out.println("Enter your new address: ");
             address = sc.nextLine();
+            logger.info("User updated address to: "+address);
+        } else {
+            logger.info("User chose not to update address");
         }
         System.out.println("Updated User Information:");
         System.out.println("Name: " + name);
@@ -193,14 +213,18 @@ public class ExercisesTuesday {
                     File userInfoFile = new File(fileName);
                     if (userInfoFile.delete()) {
                         System.out.println("Your information has been deleted.");
+                        logger.info("User deleted all data");
                     } else {
                         System.out.println("Failed to delete your information.");
                     }
                 } catch (Exception e) {
                     System.err.println("An error occurred while deleting the information: " + e.getMessage());
                 }
+            } else {
+                logger.info("User chose not to delete data.");
             }
         }
         sc.close();
+        System.out.println("Interaction count: "+interactionCount);
     }
 }
