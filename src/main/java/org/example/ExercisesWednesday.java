@@ -9,9 +9,34 @@ public class ExercisesWednesday {
         private static Logger logger = Logger.getLogger("UserInteractions");
         private static int interactionCount = 0;
         private static List<String[]> users = new ArrayList<>();
+
+    static {
+        try {
+            FileHandler fileHandler = new FileHandler("user_interactions.log", true);
+            SimpleFormatter formatter = new SimpleFormatter();
+            fileHandler.setFormatter(formatter);
+            logger.addHandler(fileHandler);
+            BufferedReader countReader = new BufferedReader(new FileReader("interaction_count.txt"));
+            String countStr = countReader.readLine();
+            if (countStr != null) {
+                interactionCount = Integer.parseInt(countStr);;
+            }
+            countReader.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        interactionCount++;
+        try {
+            FileWriter countWriter = new FileWriter("interaction_count.txt");
+            countWriter.write(String.valueOf(interactionCount));
+            countWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     private static void saveUserDataToCSV(String fileName) {  //exercise 1
-        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
-            writer.println("Name, Age, Year of Birth, Age Category, Email, Phone, Address, Favorite Book Title, Book Author, Published Year, Favorite Color");
+        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName, true))) {
             for (String[] userData : users) {
                 String line = String.join(", ", userData);
                 writer.println(line);
@@ -21,32 +46,6 @@ public class ExercisesWednesday {
             System.err.println("An error occurred while saving user data to the CSV file: " + e.getMessage());
         }
     }
-
-static {
-            try {
-                FileHandler fileHandler = new FileHandler("user_interactions.log", true);
-                SimpleFormatter formatter = new SimpleFormatter();
-                fileHandler.setFormatter(formatter);
-                logger.addHandler(fileHandler);
-                BufferedReader countReader = new BufferedReader(new FileReader("interaction_count.txt"));
-                String countStr = countReader.readLine();
-                if (countStr != null) {
-                    interactionCount = Integer.parseInt(countStr);;
-                }
-                countReader.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            interactionCount++;
-            try {
-                FileWriter countWriter = new FileWriter("interaction_count.txt");
-                countWriter.write(String.valueOf(interactionCount));
-                countWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         public static boolean isValidEmail(String email) {
             String regex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
             Pattern pattern = Pattern.compile(regex);
@@ -252,6 +251,16 @@ static {
                 }
             }
             sc.close();
+            System.out.println("Contents of users.csv:");
+            try (BufferedReader reader = new BufferedReader(new FileReader("users.csv"))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                }
+            } catch (IOException e) {
+                System.err.println("An error occurred while reading users.csv: " + e.getMessage());
+            }
+            sc.close();
             System.out.println("Interaction count: "+interactionCount);
-        }
     }
+}
