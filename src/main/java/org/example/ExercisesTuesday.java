@@ -13,16 +13,21 @@ public class ExercisesTuesday {
             SimpleFormatter formatter = new SimpleFormatter();
             fileHandler.setFormatter(formatter);
             logger.addHandler(fileHandler);
-            BufferedReader logReader = new BufferedReader(new FileReader("user_interactions.log"));
-            String line;
-            while ((line = logReader.readLine()) != null) {
-                if (line.contains("Interaction Count:")) {
-                    String countStr = line.split(":")[1].trim();
-                    interactionCount = Integer.parseInt(countStr);
-                }
+            BufferedReader countReader = new BufferedReader(new FileReader("interaction_count.txt"));
+            String countStr = countReader.readLine();
+            if (countStr != null) {
+                interactionCount = Integer.parseInt(countStr);;
             }
-            logReader.close();
-            interactionCount++;
+            countReader.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        interactionCount++;
+        try {
+            FileWriter countWriter = new FileWriter("interaction_count.txt");
+            countWriter.write(String.valueOf(interactionCount));
+            countWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
