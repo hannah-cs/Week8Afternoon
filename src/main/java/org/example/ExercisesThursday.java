@@ -5,6 +5,9 @@ import java.io.Serializable;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -116,7 +119,6 @@ public class ExercisesThursday {
                 e.printStackTrace();
             }
 
-            //ex 4
             Scanner scanner = new Scanner(System.in);
             System.out.println("Would you like to update student data? (y/n)");
             String updateChoice = scanner.nextLine();
@@ -140,7 +142,7 @@ public class ExercisesThursday {
                     switch (choice) {
                         case 1:
                             System.out.println("Current GPA: "+studentToUpdate.getGPA()+". Please enter new GPA.");
-                            double newGPA = scanner.nextInt();
+                            double newGPA = scanner.nextDouble();
                             studentToUpdate.setGPA(newGPA);
                             System.out.println("Successfully updated "+studentToUpdate.getName()+"'s GPA to "+newGPA);
                             break;
@@ -168,6 +170,14 @@ public class ExercisesThursday {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+
+            try {
+                String backupFile = "student_data_backup.ser";
+                Files.copy(Paths.get(fileName), Paths.get(backupFile), StandardCopyOption.REPLACE_EXISTING);
+                System.out.println("Created a copy of " + fileName + " at " + backupFile);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
