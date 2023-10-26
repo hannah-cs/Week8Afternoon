@@ -1,7 +1,13 @@
 package org.example;
-import java.io.*;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class ExercisesThursday {
     public static class Student implements Serializable {
@@ -15,6 +21,46 @@ public class ExercisesThursday {
             this.name = name;
             this.address = address;
             this.GPA = GPA;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public double getGPA() {
+            return GPA;
+        }
+
+        public void setGPA(double GPA) {
+            this.GPA = GPA;
+        }
+
+        public List<String> getCourses() {
+            return courses;
+        }
+
+        public void setCourses(List<String> courses) {
+            this.courses = courses;
+        }
+
+        public List<String> getHobbies() {
+            return hobbies;
+        }
+
+        public void setHobbies(List<String> hobbies) {
+            this.hobbies = hobbies;
         }
 
         public void addHobby(String hobby){
@@ -51,16 +97,16 @@ public class ExercisesThursday {
             students.add(student2);
             students.add(student3);
 
-            String baseFileName = "data_student";
+            String fileName = "data_student";
 
-            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(baseFileName))) {
+            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
                 out.writeObject(students);
                 System.out.println("Students serialized successfully");
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(baseFileName))) {
+            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
                 List<Student> deserializedStudents = (List<Student>) in.readObject();
                 System.out.println("Deserialized students: ");
                 for (Student student : deserializedStudents) {
@@ -68,6 +114,60 @@ public class ExercisesThursday {
                 }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
+            }
+
+            //ex 4
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Would you like to update student data? (y/n)");
+            String updateChoice = scanner.nextLine();
+            if (updateChoice.contains("y")) {
+                System.out.println("Enter the name of the student you would like to update.");
+                String studentName = scanner.next();
+                Student studentToUpdate = null;
+                for (Student student : students) {
+                    if (student.getName().equals(studentName)) {
+                        studentToUpdate = student;
+                    }
+                }
+                if (studentToUpdate == null) {
+                    System.out.println("Not found");
+                } else {
+                    System.out.println("Which info would you like to update? Enter the number.");
+                    System.out.println("1. Edit GPA");
+                    System.out.println("2. Add course");
+                    System.out.println("3. Add hobby");
+                    int choice = scanner.nextInt();
+                    switch (choice) {
+                        case 1:
+                            System.out.println("Current GPA: "+studentToUpdate.getGPA()+". Please enter new GPA.");
+                            double newGPA = scanner.nextInt();
+                            studentToUpdate.setGPA(newGPA);
+                            System.out.println("Successfully updated "+studentToUpdate.getName()+"'s GPA to "+newGPA);
+                            break;
+                        case 2:
+                            System.out.println("Existing courses: "+studentToUpdate.getCourses()+". Enter new course.");
+                            scanner.nextLine();
+                            String newCourse = scanner.nextLine();
+                            studentToUpdate.addCourse(newCourse);
+                            System.out.println("Successfully added "+newCourse+" to "+studentToUpdate.getName()+"'s courses.");
+                            break;
+                        case 3:
+                            System.out.println("Existing hobbies: "+studentToUpdate.getHobbies()+". Enter new hobby.");
+                            scanner.nextLine();
+                            String newHobby = scanner.nextLine();
+                            studentToUpdate.addHobby(newHobby);
+                            System.out.println("Successfully added "+newHobby+" to "+studentToUpdate.getName()+"'s hobbies.");
+                            break;
+                        default:
+                            System.out.println("Not a valid option.");
+                    }
+                }
+                try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+                    out.writeObject(students);
+                    System.out.println("Info updated and serialized successfully");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
