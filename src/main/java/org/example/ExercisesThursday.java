@@ -14,6 +14,7 @@ import java.util.Scanner;
 
 public class ExercisesThursday {
     static List<Student> students = new ArrayList<>();
+    static String fileName = "data_student";
     public static class Student implements Serializable {
         private String name;
         private String address;
@@ -113,6 +114,11 @@ public class ExercisesThursday {
             if (choice.contains("y")) {
                 students.remove(student);
                 System.out.println("Student deleted.");
+                try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+                    out.writeObject(students);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } else {
                 System.out.println(student.getName()+" not deleted.");
             }
@@ -126,8 +132,6 @@ public class ExercisesThursday {
             students.add(student1);
             students.add(student2);
             students.add(student3);
-
-            String fileName = "data_student";
 
             try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
                 out.writeObject(students);
