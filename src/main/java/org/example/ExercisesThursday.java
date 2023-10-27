@@ -247,6 +247,15 @@ public class ExercisesThursday {
             }
         }
 
+        public static void exportStudents(){
+            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("exported_students.txt"))) {
+                out.writeObject(students);
+                System.out.println("Exported students");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         public static void main(String[] args) {
             Student student1 = new Student("Hannah", "Berlin 123", 3.5);
@@ -351,6 +360,7 @@ public class ExercisesThursday {
 
             courseList("Java");
             gradeList();
+            exportStudents();
         }
     }
 }
