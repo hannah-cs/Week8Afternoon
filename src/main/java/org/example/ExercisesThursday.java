@@ -91,6 +91,21 @@ public class ExercisesThursday {
             return "Name: "+name+", address: "+address+", GPA: "+GPA+". Courses taken: "+courses+", hobbies: "+hobbies;
         }
 
+        public static void search(List<Student> students, String searchTerm){
+            for (Student student : students) {
+                if (student.getName().contains(searchTerm)) {
+                    System.out.println("Found student: "+student);
+                    break;
+                } else if (student.getHobbies().contains(searchTerm)) {
+                    System.out.println("Found student: "+student);
+                    break;
+                } else {
+                    System.out.println("No student found.");
+                }
+            }
+        }
+
+
         public static void main(String[] args) {
             List<Student> students = new ArrayList<>();
             Student student1 = new Student("Hannah", "Berlin 123", 3.5);
@@ -179,6 +194,8 @@ public class ExercisesThursday {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            search(students, "Hannah");
         }
     }
 }
