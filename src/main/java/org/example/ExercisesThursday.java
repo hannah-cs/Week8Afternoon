@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -124,6 +125,17 @@ public class ExercisesThursday {
             }
         }
 
+        public static double avgGpa(){
+            double total = 0;
+            for (Student student : students){
+                total += student.getGPA();
+            }
+            int size = students.size();
+            double average = (total / size);
+            DecimalFormat df = new DecimalFormat("#.#");
+            return Double.parseDouble(df.format(average));
+        }
+
 
         public static void main(String[] args) {
             Student student1 = new Student("Hannah", "Berlin 123", 3.5);
@@ -214,6 +226,9 @@ public class ExercisesThursday {
             search(students, "Hannah");
             deleteStudent(student1);
             System.out.println(students);
+
+            System.out.println("Average GPA:"+avgGpa());
+
         }
     }
 }
