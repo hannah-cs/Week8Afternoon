@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ExercisesThursday {
+    static List<Student> students = new ArrayList<>();
     public static class Student implements Serializable {
         private String name;
         private String address;
@@ -105,9 +106,20 @@ public class ExercisesThursday {
             }
         }
 
+        public static void deleteStudent(Student student){
+            System.out.println("Delete "+student.getName()+". Are you sure? (y/n)");
+            Scanner sc = new Scanner(System.in);
+            String choice = sc.nextLine();
+            if (choice.contains("y")) {
+                students.remove(student);
+                System.out.println("Student deleted.");
+            } else {
+                System.out.println(student.getName()+" not deleted.");
+            }
+        }
+
 
         public static void main(String[] args) {
-            List<Student> students = new ArrayList<>();
             Student student1 = new Student("Hannah", "Berlin 123", 3.5);
             Student student2 = new Student("Rosa", "Berlin 321", 4.0);
             Student student3 = new Student("Miro", "Berlin 456", 2.1);
@@ -196,6 +208,8 @@ public class ExercisesThursday {
             }
 
             search(students, "Hannah");
+            deleteStudent(student1);
+            System.out.println(students);
         }
     }
 }
