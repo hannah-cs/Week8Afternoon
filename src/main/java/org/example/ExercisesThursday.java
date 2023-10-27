@@ -20,6 +20,7 @@ public class ExercisesThursday {
         private String name;
         private String address;
         private double GPA;
+        private String grade;
         private transient List<String> courses = new ArrayList<>();
         private transient List<String> hobbies = new ArrayList<>();
 
@@ -27,10 +28,27 @@ public class ExercisesThursday {
             this.name = name;
             this.address = address;
             this.GPA = GPA;
+            if (GPA > 3.3 && GPA <= 4.0) {
+                grade = "A";
+            } else if (GPA > 2.4 && GPA <= 3.3) {
+                grade = "B";
+            } else if (GPA > 1.3 && GPA <= 2.4) {
+                grade = "C";
+            } else if (GPA >= 1.0 && GPA <= 1.3) {
+                grade = "D";
+            } else if (GPA < 1.0) {
+                grade = "F";
+            } else {
+                grade = "NG";
+            }
         }
 
         public String getName() {
             return name;
+        }
+
+        public String getGrade() {
+            return grade;
         }
 
         public void setName(String name) {
@@ -267,7 +285,6 @@ public class ExercisesThursday {
             search(students, "Java");
 
             courseList("Java");
-
         }
     }
 }
