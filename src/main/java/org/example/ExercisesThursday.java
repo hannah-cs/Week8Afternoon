@@ -182,6 +182,71 @@ public class ExercisesThursday {
             }
         }
 
+        public static void gradeList(){
+            List<Student> aStudents = new ArrayList<>();
+            List<Student> bStudents = new ArrayList<>();
+            List<Student> cStudents = new ArrayList<>();
+            List<Student> dStudents = new ArrayList<>();
+            List<Student> fStudents = new ArrayList<>();
+            List<Student> ngStudents = new ArrayList<>();
+            for (Student student : students){
+                if (student.getGrade().contains("A")) {
+                    aStudents.add(student);
+                }
+                if (student.getGrade().contains("B")) {
+                    bStudents.add(student);
+                }
+                if (student.getGrade().contains("C")) {
+                    cStudents.add(student);
+                }
+                if (student.getGrade().contains("D")) {
+                    dStudents.add(student);
+                }
+                if (student.getGrade().contains("F")) {
+                    fStudents.add(student);
+                }
+                if (student.getGrade().contains("NG")) {
+                    ngStudents.add(student);
+                }
+            }
+            if (aStudents.size() != 0) {
+                System.out.println("A students: ");
+                for (Student student : aStudents) {
+                    System.out.println(student.getName());
+                }
+            }
+            if (bStudents.size() != 0) {
+                System.out.println("B students: ");
+                for (Student student : bStudents) {
+                    System.out.println(student.getName());
+                }
+            }
+            if (cStudents.size() != 0) {
+                System.out.println("C students: ");
+                for (Student student : cStudents) {
+                    System.out.println(student.getName());
+                }
+            }
+            if (dStudents.size() != 0) {
+                System.out.println("D students: ");
+                for (Student student : dStudents) {
+                    System.out.println(student.getName());
+                }
+            }
+            if (fStudents.size() != 0) {
+                System.out.println("F students: ");
+                for (Student student : fStudents) {
+                    System.out.println(student.getName());
+                }
+            }
+            if (ngStudents.size() != 0) {
+                System.out.println("Students without grade: ");
+                for (Student student : ngStudents) {
+                    System.out.println(student.getName());
+                }
+            }
+        }
+
 
         public static void main(String[] args) {
             Student student1 = new Student("Hannah", "Berlin 123", 3.5);
@@ -285,6 +350,7 @@ public class ExercisesThursday {
             search(students, "Java");
 
             courseList("Java");
+            gradeList();
         }
     }
 }
