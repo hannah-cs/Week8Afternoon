@@ -94,19 +94,34 @@ public class ExercisesThursday {
             return "Name: "+name+", address: "+address+", GPA: "+GPA+". Courses taken: "+courses+", hobbies: "+hobbies;
         }
 
-        public static void search(List<Student> students, String searchTerm){
+        public static void search(List<Student> students, String searchTerm) {
+            boolean found = false;
             for (Student student : students) {
                 if (student.getName().contains(searchTerm)) {
-                    System.out.println("Found student: "+student);
-                    break;
-                } else if (student.getHobbies().contains(searchTerm)) {
-                    System.out.println("Found student: "+student);
-                    break;
-                } else {
-                    System.out.println("No student found.");
+                    System.out.println("Found student: " + student);
+                    found = true;
+                    continue;
+                }
+                for (String hobby : student.getHobbies()) {
+                    if (hobby.contains(searchTerm)) {
+                        System.out.println("Found student: " + student);
+                        found = true;
+                        break;
+                    }
+                }
+                for (String course : student.getCourses()) {
+                    if (course.contains(searchTerm)) {
+                        System.out.println("Found student: " + student);
+                        found = true;
+                        break;
+                    }
                 }
             }
+            if (!found) {
+                System.out.println("No match found.");
+            }
         }
+
 
         public static void deleteStudent(Student student){
             System.out.println("Delete "+student.getName()+". Are you sure? (y/n)");
@@ -228,6 +243,15 @@ public class ExercisesThursday {
             System.out.println(students);
 
             System.out.println("Average GPA:"+avgGpa());
+
+            student1.addCourse("Java");
+            student1.addCourse("DevOps");
+            student1.addCourse("Soft Skills");
+            student2.addCourse("Soft Skills");
+            student2.addCourse("Marketing");
+            student2.addCourse("SEO");
+
+            search(students, "Java");
 
         }
     }
