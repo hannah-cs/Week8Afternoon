@@ -151,6 +151,19 @@ public class ExercisesThursday {
             return Double.parseDouble(df.format(average));
         }
 
+        public static void courseList(String course){
+            List<Student> courseList = new ArrayList<>();
+            for (Student student : students){
+                if (student.getCourses().contains(course)) {
+                    courseList.add(student);
+                }
+            }
+            System.out.println("Students taking "+course);
+            for (Student student : courseList) {
+                System.out.println(student.getName()+", "+student.getGPA());
+            }
+        }
+
 
         public static void main(String[] args) {
             Student student1 = new Student("Hannah", "Berlin 123", 3.5);
@@ -252,6 +265,8 @@ public class ExercisesThursday {
             student2.addCourse("SEO");
 
             search(students, "Java");
+
+            courseList("Java");
 
         }
     }
